@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Trade Check">
+    <meta name="theme-color" content="#2D4A8C">
+    
+    <title>SuperTrendslinger - Trade Checker Pro</title>
+    <meta name="description" content="My trading strategy validator">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #2D4A8C 0%, #1a2d5a 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .app-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 15px;
+            font-size: 60px;
+            line-height: 80px;
+        }
+
+        h1 {
+            color: #2D4A8C;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .question {
+            margin-bottom: 25px;
+        }
+
+        .question-text {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #333;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        button {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            touch-action: manipulation;
+        }
+
+        .btn-yes {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-yes:active {
+            background: #059669;
+            transform: scale(0.98);
+        }
+
+        .btn-no {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-no:active {
+            background: #dc2626;
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #2D4A8C 0%, #1a2d5a 100%);
+            color: white;
+            width: 100%;
+            padding: 18px;
+            font-size: 18px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:active {
+            background: #4b5563;
+            transform: scale(0.98);
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #F4C430 0%, #d4a420 100%);
+            color: #1a2d5a;
+            font-weight: 700;
+        }
+
+        .btn-gold:active {
+            transform: scale(0.98);
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-top: 8px;
+            transition: border 0.3s;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #2D4A8C;
+        }
+
+        .trade-card {
+            background: linear-gradient(135deg, #2D4A8C 0%, #1a2d5a 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .trade-card h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .trade-details {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .trade-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 15px;
+        }
+
+        .trade-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .trade-label {
+            font-weight: 600;
+        }
+
+        .trade-value {
+            font-weight: 700;
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .alert-danger {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 2px solid #fca5a5;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 2px solid #6ee7b7;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .direction-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .direction-btn {
+            flex: 1;
+            padding: 15px;
+            border: 3px solid #e5e7eb;
+            background: white;
+            color: #666;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .direction-btn.active-long {
+            border-color: #10b981;
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .direction-btn.active-short {
+            border-color: #ef4444;
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f3f4f6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2D4A8C;
+        }
+
+        .stat-value.positive {
+            color: #10b981;
+        }
+
+        .stat-value.negative {
+            color: #ef4444;
+        }
+
+        .trade-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .trade-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 4px solid #2D4A8C;
+        }
+
+        .trade-item.win {
+            border-left-color: #10b981;
+        }
+
+        .trade-item.loss {
+            border-left-color: #ef4444;
+        }
+
+        .trade-item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .trade-item-details {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            background: #e5e7eb;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(135deg, #2D4A8C 0%, #1a2d5a 100%);
+            color: white;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #F4C430, #d4a420);
+            transition: width 0.3s;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-logo {
+                width: 60px;
+                height: 60px;
+                font-size: 50px;
+                line-height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="card">
+            <div class="app-header">
+                <div class="app-logo">💰</div>
+                <h1>SuperTrendslinger</h1>
+                <p class="subtitle">My trading strategy validator</p>
+            </div>
+            
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="showTab('check')">New Trade</button>
+                <button class="nav-tab" onclick="showTab('history')">History</button>
+                <button class="nav-tab" onclick="showTab('stats')">Stats</button>
+            </div>
+
+            <div id="checkTab">
+                <button class="btn-primary" onclick="startTradeCheck()">
+                    🚀 Start Trade Check
+                </button>
+            </div>
+
+            <div id="historyTab" class="hidden">
+                <div class="trade-list" id="tradeList"></div>
+                <button class="btn-gold" onclick="exportToCSV()">
+                    📥 Export to CSV
+                </button>
+            </div>
+
+            <div id="statsTab" class="hidden">
+                <div class="stats-grid" id="statsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Trade Check Screen -->
+        <div id="checklistScreen" class="card hidden">
+            <div class="app-header">
+                <div class="app-logo">💰</div>
+                <h1>Pre-Trade Checklist</h1>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+            </div>
+
+            <div id="directionQuestion" class="question">
+                <div class="question-text">Trade Direction?</div>
+                <div class="direction-selector">
+                    <button class="direction-btn" onclick="selectDirection('long')">
+                        📈 LONG
+                    </button>
+                    <button class="direction-btn" onclick="selectDirection('short')">
+                        📉 SHORT
+                    </button>
+                </div>
+            </div>
+
+            <div id="question1" class="question hidden">
+                <div class="question-text">1. Are 1m & 5m Supertrend the same color?</div>
+                <div class="button-group">
+                    <button class="btn-yes" onclick="answer(1, true)">✓ YES</button>
+                    <button class="btn-no" onclick="answer(1, false)">✗ NO</button>
+                </div>
+            </div>
+
+            <div id="question2" class="question hidden">
+                <div class="question-text">2. Did price tap a 15m AOI (Support/Resistance)?</div>
+                <div class="button-group">
+                    <button class="btn-yes" onclick="answer(2, true)">✓ YES</button>
+                    <button class="btn-no" onclick="answer(2, false)">✗ NO</button>
+                </div>
+            </div>
+
+            <div id="question3" class="question hidden">
+                <div class="question-text">3. Was 5m trending FIRST, then 1m switched to match?</div>
+                <div class="button-group">
+                    <button class="btn-yes" onclick="answer(3, true)">✓ YES</button>
+                    <button class="btn-no" onclick="answer(3, false)">✗ NO</button>
+                </div>
+            </div>
+
+            <div id="question4" class="question hidden">
+                <div class="question-text">4. Enter current 5m ATR value:</div>
+                <input type="number" id="atrInput" step="0.1" placeholder="e.g., 5.2" onkeypress="handleEnter(event, 'atrNext')">
+                <button class="btn-primary" id="atrNext" onclick="answer(4, true)" style="margin-top: 15px;">Continue →</button>
+            </div>
+
+            <div id="question5" class="question hidden">
+                <div class="question-text">5. Enter your entry price:</div>
+                <input type="number" id="entryInput" step="0.1" placeholder="e.g., 4135.0" onkeypress="handleEnter(event, 'calculateBtn')">
+                <button class="btn-primary" id="calculateBtn" onclick="calculateTrade()" style="margin-top: 15px;">Calculate Trade →</button>
+            </div>
+        </div>
+
+        <!-- Rejection Screen -->
+        <div id="rejectionScreen" class="card hidden">
+            <div class="app-header">
+                <div class="app-logo">💰</div>
+            </div>
+            <div class="alert alert-danger" id="rejectionReason"></div>
+            <button class="btn-secondary" onclick="resetCheck()">← Start Over</button>
+        </div>
+
+        <!-- Trade Approval Screen -->
+        <div id="approvalScreen" class="card hidden">
+            <div class="alert alert-success">✅ ALL CONDITIONS MET - TRADE APPROVED</div>
+            
+            <div class="trade-card" id="tradeCard">
+                <h2 id="tradeDirection"></h2>
+                <div class="trade-details">
+                    <div class="trade-row">
+                        <span class="trade-label">Entry:</span>
+                        <span class="trade-value" id="displayEntry"></span>
+                    </div>
+                    <div class="trade-row">
+                        <span class="trade-label">Stop Loss:</span>
+                        <span class="trade-value" id="displayStop"></span>
+                    </div>
+                    <div class="trade-row">
+                        <span class="trade-label">TP1 (1:1):</span>
+                        <span class="trade-value" id="displayTP1"></span>
+                    </div>
+                    <div class="trade-row">
+                        <span class="trade-label">TP2 (1:2):</span>
+                        <span class="trade-value" id="displayTP2"></span>
+                    </div>
+                </div>
+                <div class="trade-details">
+                    <div class="trade-row">
+                        <span class="trade-label">Risk (per contract):</span>
+                        <span class="trade-value" id="displayRisk"></span>
+                    </div>
+                    <div class="trade-row">
+                        <span class="trade-label">Reward 1:1:</span>
+                        <span class="trade-value" id="displayReward1"></span>
+                    </div>
+                    <div class="trade-row">
+                        <span class="trade-label">Reward 1:2:</span>
+                        <span class="trade-value" id="displayReward2"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="question-text" style="margin-bottom: 12px;">Number of contracts:</div>
+            <input type="number" id="contractsInput" value="3" min="1" max="10" step="1" style="margin-bottom: 20px;">
+
+            <button class="btn-gold" onclick="executeTrade()">🎯 Execute Trade</button>
+            <button class="btn-secondary" onclick="resetCheck()" style="margin-top: 10px; width: 100%;">✗ Cancel</button>
+        </div>
+
+        <!-- Trade Result Screen -->
+        <div id="resultScreen" class="card hidden">
+            <div class="app-header">
+                <div class="app-logo">💰</div>
+                <h1>Trade Executed</h1>
+                <p class="subtitle">How did this trade turn out?</p>
+            </div>
+            
+            <div class="question">
+                <div class="question-text">Trade Outcome:</div>
+                <div class="button-group" style="flex-direction: column;">
+                    <button class="btn-yes" onclick="logTradeResult('win')">✓ WIN</button>
+                    <button class="btn-no" onclick="logTradeResult('loss')">✗ LOSS</button>
+                    <button class="btn-secondary" onclick="logTradeResult('breakeven')">⚖️ BREAKEVEN</button>
+                </div>
+            </div>
+
+            <div class="question">
+                <div class="question-text">Profit/Loss Amount ($):</div>
+                <input type="number" id="plAmount" step="0.01" placeholder="e.g., 225.50 or -150.00">
+            </div>
+
+            <button class="btn-primary" onclick="saveTrade()">Save Trade & Continue</button>
+        </div>
+    </div>
+
+    <script>
+        let currentTrade = {
+            direction: '',
+            atr: 0,
+            entry: 0,
+            stop: 0,
+            tp1: 0,
+            tp2: 0,
+            contracts: 3,
+            timestamp: null
+        };
+
+        let answers = [];
+        let currentQuestion = 0;
+
+        function loadTrades() {
+            const trades = localStorage.getItem('trades');
+            return trades ? JSON.parse(trades) : [];
+        }
+
+        function saveTrades(trades) {
+            localStorage.setItem('trades', JSON.stringify(trades));
+        }
+
+        function showTab(tab) {
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.getElementById('checkTab').classList.add('hidden');
+            document.getElementById('historyTab').classList.add('hidden');
+            document.getElementById('statsTab').classList.add('hidden');
+
+            if (tab === 'check') {
+                document.getElementById('checkTab').classList.remove('hidden');
+            } else if (tab === 'history') {
+                document.getElementById('historyTab').classList.remove('hidden');
+                displayTradeHistory();
+            } else if (tab === 'stats') {
+                document.getElementById('statsTab').classList.remove('hidden');
+                displayStats();
+            }
+        }
+
+        function startTradeCheck() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('checklistScreen').classList.remove('hidden');
+            answers = [];
+            currentQuestion = 0;
+            updateProgress();
+        }
+
+        function selectDirection(direction) {
+            currentTrade.direction = direction;
+            
+            document.querySelectorAll('.direction-btn').forEach(btn => {
+                btn.classList.remove('active-long', 'active-short');
+            });
+            event.target.classList.add(direction === 'long' ? 'active-long' : 'active-short');
+
+            setTimeout(() => {
+                document.getElementById('directionQuestion').classList.add('hidden');
+                document.getElementById('question1').classList.remove('hidden');
+                currentQuestion = 1;
+                updateProgress();
+            }, 300);
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / 5) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function answer(questionNum, response) {
+            if (!response && questionNum < 4) {
+                const reasons = {
+                    1: "❌ 1m & 5m Supertrend are NOT aligned. Wait for both timeframes to match before entering.",
+                    2: "❌ Price has NOT tapped a 15m AOI. Wait for price to reach a key support/resistance level.",
+                    3: "❌ 5m did NOT trend first. The 5m must establish trend direction before 1m confirmation."
+                };
+                
+                document.getElementById('checklistScreen').classList.add('hidden');
+                document.getElementById('rejectionScreen').classList.remove('hidden');
+                document.getElementById('rejectionReason').textContent = reasons[questionNum];
+                return;
+            }
+
+            answers.push(response);
+            document.getElementById('question' + questionNum).classList.add('hidden');
+            
+            if (questionNum < 5) {
+                document.getElementById('question' + (questionNum + 1)).classList.remove('hidden');
+                currentQuestion = questionNum + 1;
+                updateProgress();
+            }
+
+            setTimeout(() => {
+                if (questionNum === 3) {
+                    document.getElementById('atrInput').focus();
+                } else if (questionNum === 4) {
+                    document.getElementById('entryInput').focus();
+                }
+            }, 100);
+        }
+
+        function handleEnter(event, buttonId) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                document.getElementById(buttonId).click();
+            }
+        }
+
+        function calculateTrade() {
+            const atr = parseFloat(document.getElementById('atrInput').value);
+            const entry = parseFloat(document.getElementById('entryInput').value);
+
+            if (!atr || !entry || atr <= 0 || entry <= 0) {
+                alert('Please enter valid ATR and Entry Price values.');
+                return;
+            }
+
+            currentTrade.atr = atr;
+            currentTrade.entry = entry;
+            currentTrade.timestamp = new Date().toISOString();
+
+            const stopDistance = atr * 1.5;
+            
+            if (currentTrade.direction === 'long') {
+                currentTrade.stop = entry - stopDistance;
+                currentTrade.tp1 = entry + stopDistance;
+                currentTrade.tp2 = entry + (stopDistance * 2);
+            } else {
+                currentTrade.stop = entry + stopDistance;
+                currentTrade.tp1 = entry - stopDistance;
+                currentTrade.tp2 = entry - (stopDistance * 2);
+            }
+
+            displayTradeCard();
+        }
+
+        function displayTradeCard() {
+            document.getElementById('checklistScreen').classList.add('hidden');
+            document.getElementById('approvalScreen').classList.remove('hidden');
+
+            const directionText = currentTrade.direction === 'long' ? '📈 LONG SETUP' : '📉 SHORT SETUP';
+            document.getElementById('tradeDirection').textContent = directionText;
+
+            document.getElementById('displayEntry').textContent = currentTrade.entry.toFixed(1);
+            document.getElementById('displayStop').textContent = currentTrade.stop.toFixed(1) + 
+                ` (${currentTrade.direction === 'long' ? '-' : '+'}${Math.abs(currentTrade.entry - currentTrade.stop).toFixed(1)} pts)`;
+            document.getElementById('displayTP1').textContent = currentTrade.tp1.toFixed(1) + 
+                ` (+${Math.abs(currentTrade.tp1 - currentTrade.entry).toFixed(1)} pts)`;
+            document.getElementById('displayTP2').textContent = currentTrade.tp2.toFixed(1) + 
+                ` (+${Math.abs(currentTrade.tp2 - currentTrade.entry).toFixed(1)} pts)`;
+
+            const riskPerContract = Math.abs(currentTrade.entry - currentTrade.stop) * 10;
+            document.getElementById('displayRisk').textContent = '$' + riskPerContract.toFixed(2);
+            document.getElementById('displayReward1').textContent = '$' + riskPerContract.toFixed(2);
+            document.getElementById('displayReward2').textContent = '$' + (riskPerContract * 2).toFixed(2);
+        }
+
+        function executeTrade() {
+            currentTrade.contracts = parseInt(document.getElementById('contractsInput').value);
+            document.getElementById('approvalScreen').classList.add('hidden');
+            document.getElementById('resultScreen').classList.remove('hidden');
+
+            const riskPerContract = Math.abs(currentTrade.entry - currentTrade.stop) * 10;
+            const expectedWin = (riskPerContract * 2 * currentTrade.contracts).toFixed(2);
+            const expectedLoss = (-riskPerContract * currentTrade.contracts).toFixed(2);
+            
+            document.getElementById('plAmount').placeholder = `Expected: Win = $${expectedWin}, Loss = $${expectedLoss}`;
+        }
+
+        function logTradeResult(result) {
+            document.querySelectorAll('#resultScreen .btn-yes, #resultScreen .btn-no, #resultScreen .btn-secondary').forEach(btn => {
+                btn.style.opacity = '0.5';
+            });
+            event.target.style.opacity = '1';
+            event.target.style.transform = 'scale(1.05)';
+
+            currentTrade.result = result;
+        }
+
+        function saveTrade() {
+            if (!currentTrade.result) {
+                alert('Please select a trade outcome (Win/Loss/Breakeven)');
+                return;
+            }
+
+            const plAmount = parseFloat(document.getElementById('plAmount').value) || 0;
+            currentTrade.pl = plAmount;
+            currentTrade.completedAt = new Date().toISOString();
+
+            const trades = loadTrades();
+            trades.push({...currentTrade});
+            saveTrades(trades);
+
+            resetToWelcome();
+            alert('✅ Trade saved successfully!');
+        }
+
+        function resetCheck() {
+            document.getElementById('checklistScreen').classList.add('hidden');
+            document.getElementById('rejectionScreen').classList.add('hidden');
+            document.getElementById('approvalScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+
+            document.getElementById('directionQuestion').classList.remove('hidden');
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('question' + i).classList.add('hidden');
+            }
+            document.getElementById('atrInput').value = '';
+            document.getElementById('entryInput').value = '';
+            document.querySelectorAll('.direction-btn').forEach(btn => {
+                btn.classList.remove('active-long', 'active-short');
+            });
+
+            currentTrade = { direction: '', atr: 0, entry: 0, stop: 0, tp1: 0, tp2: 0, contracts: 3, timestamp: null };
+            answers = [];
+            currentQuestion = 0;
+            updateProgress();
+        }
+
+        function resetToWelcome() {
+            document.getElementById('resultScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            
+            document.getElementById('plAmount').value = '';
+            document.querySelectorAll('#resultScreen .btn-yes, #resultScreen .btn-no, #resultScreen .btn-secondary').forEach(btn => {
+                btn.style.opacity = '1';
+                btn.style.transform = 'scale(1)';
+            });
+
+            resetCheck();
+        }
+
+        function displayTradeHistory() {
+            const trades = loadTrades();
+            const tradeList = document.getElementById('tradeList');
+
+            if (trades.length === 0) {
+                tradeList.innerHTML = '<div style="text-align: center; color: #6b7280; padding: 40px;">No trades yet. Start your first trade check!</div>';
+                return;
+            }
+
+            tradeList.innerHTML = trades.reverse().map((trade, index) => {
+                const date = new Date(trade.completedAt || trade.timestamp);
+                const dateStr = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                const directionIcon = trade.direction === 'long' ? '📈' : '📉';
+                const resultClass = trade.result === 'win' ? 'win' : trade.result === 'loss' ? 'loss' : '';
+                const plColor = trade.pl > 0 ? 'color: #10b981' : trade.pl < 0 ? 'color: #ef4444' : 'color: #6b7280';
+
+                return `
+                    <div class="trade-item ${resultClass}">
+                        <div class="trade-item-header">
+                            <span>${directionIcon} ${trade.direction.toUpperCase()} - ${trade.result.toUpperCase()}</span>
+                            <span style="${plColor}; font-weight: 700;">${trade.pl >= 0 ? '+' : ''}$${trade.pl.toFixed(2)}</span>
+                        </div>
+                        <div class="trade-item-details">
+                            Entry: ${trade.entry.toFixed(1)} | Stop: ${trade.stop.toFixed(1)} | Contracts: ${trade.contracts}
+                        </div>
+                        <div class="trade-item-details">
+                            ${dateStr}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function displayStats() {
+            const trades = loadTrades();
+            const statsGrid = document.getElementById('statsGrid');
+
+            if (trades.length === 0) {
+                statsGrid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 40px;">No trade data yet.</div>';
+                return;
+            }
+
+            const totalTrades = trades.length;
+            const wins = trades.filter(t => t.result === 'win').length;
+            const losses = trades.filter(t => t.result === 'loss').length;
+            const winRate = ((wins / totalTrades) * 100).toFixed(1);
+            
+            const totalPL = trades.reduce((sum, t) => sum + t.pl, 0);
+            const avgWin = wins > 0 ? trades.filter(t => t.result === 'win').reduce((sum, t) => sum + t.pl, 0) / wins : 0;
+            const avgLoss = losses > 0 ? Math.abs(trades.filter(t => t.result === 'loss').reduce((sum, t) => sum + t.pl, 0) / losses) : 0;
+            
+            const bestTrade = Math.max(...trades.map(t => t.pl));
+            const worstTrade = Math.min(...trades.map(t => t.pl));
+
+            const plClass = totalPL >= 0 ? 'positive' : 'negative';
+
+            statsGrid.innerHTML = `
+                <div class="stat-box">
+                    <div class="stat-label">Total Trades</div>
+                    <div class="stat-value">${totalTrades}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Win Rate</div>
+                    <div class="stat-value">${winRate}%</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Total P/L</div>
+                    <div class="stat-value ${plClass}">$${totalPL.toFixed(2)}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">W / L</div>
+                    <div class="stat-value">${wins} / ${losses}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Avg Win</div>
+                    <div class="stat-value positive">$${avgWin.toFixed(2)}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Avg Loss</div>
+                    <div class="stat-value negative">$${avgLoss.toFixed(2)}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Best Trade</div>
+                    <div class="stat-value positive">$${bestTrade.toFixed(2)}</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Worst Trade</div>
+                    <div class="stat-value negative">$${worstTrade.toFixed(2)}</div>
+                </div>
+            `;
+        }
+
+        function exportToCSV() {
+            const trades = loadTrades();
+            
+            if (trades.length === 0) {
+                alert('No trades to export');
+                return;
+            }
+
+            let csv = 'Date,Time,Direction,Entry,Stop,TP1,TP2,ATR,Contracts,Result,P/L\n';
+
+            trades.forEach(trade => {
+                const date = new Date(trade.completedAt || trade.timestamp);
+                const dateStr = date.toLocaleDateString();
+                const timeStr = date.toLocaleTimeString();
+                
+                csv += `${dateStr},${timeStr},${trade.direction},${trade.entry},${trade.stop},${trade.tp1},${trade.tp2},${trade.atr},${trade.contracts},${trade.result},${trade.pl}\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('hidden', '');
+            a.setAttribute('href', url);
+            a.setAttribute('download', `trade-history-${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            alert('✅ Trade history exported to CSV!');
+        }
+
+        window.onload = function() {
+            displayStats();
+        };
+    </script>
+</body>
+</html>
